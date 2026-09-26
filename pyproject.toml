@@ -1,0 +1,22 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "duva-mail"
+version = "0.0.1"
+description = "Official Duva client library (transactional email API hosted in Canada). Name reserved: not released yet."
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+requires-python = ">=3.10"
+authors = [{ name = "9573-4562 Québec inc." }]
+keywords = ["duva", "email", "transactional-email", "api"]
+
+[project.urls]
+Homepage = "https://duva.ca"
+Documentation = "https://duva.ca/en/docs"
+Repository = "https://github.com/duva-mail/duva-python"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/duva"]
