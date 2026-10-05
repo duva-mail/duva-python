@@ -60,10 +60,16 @@ def _message_body(
     headers: dict[str, str] | None = None,
     metadata: dict[str, str] | None = None,
     attachments: list[Attachment] | None = None,
+    cc: list[str] | None = None,
+    bcc: list[str] | None = None,
 ) -> dict[str, object]:
     if attachments:
         assert_attachment_limits(attachments)
     body: dict[str, object] = {"from": from_, "to": to, "subject": subject}
+    if cc is not None:
+        body["cc"] = cc
+    if bcc is not None:
+        body["bcc"] = bcc
     if html is not None:
         body["html"] = html
     if text is not None:
@@ -155,6 +161,10 @@ class _Messages:
         then never create a duplicate message, but two separate calls each get their own random
         key, so they are NOT deduplicated against each other; pass your own stable key for that
         (e.g. an order id).
+
+        `to`, `cc` and `bcc` take addresses or `Name <address>`; they count together against the
+        plan's recipient maximum. Every copy shows all the `to` and all the `cc`; a `bcc` address
+        appears only on its own copy.
         """
         body = _message_body(from_, to, subject, **fields)  # type: ignore[arg-type]
         key = idempotency_key or str(uuid.uuid4())

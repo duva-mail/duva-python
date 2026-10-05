@@ -24,7 +24,7 @@ from duva.errors import (
     error_from_response,
 )
 
-_PACKAGE_VERSION = "0.1.0"
+_PACKAGE_VERSION = "0.2.0"
 _DEFAULT_BASE_URL = "https://api.duva.ca"
 
 

@@ -29,6 +29,8 @@ CALL: dict[str, Callable[[Duva, dict[str, Any]], object]] = {
     "sendMessage": lambda duva, i: duva.messages.send(
         from_=i["from_"],
         to=i["to"],
+        cc=i.get("cc"),
+        bcc=i.get("bcc"),
         subject=i["subject"],
         text=i.get("text"),
         tags=i.get("tags"),

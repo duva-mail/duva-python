@@ -41,6 +41,23 @@ async with AsyncDuva(api_key="dv_...", domain="example.com") as duva:
     )
 ```
 
+### To, Cc and Bcc
+
+`to`, `cc` and `bcc` take addresses or `Name <address>`. Every copy shows all the `to` and all the
+`cc`; a `bcc` address appears only on its own copy. The three lists together count against your
+plan's recipient maximum.
+
+```python
+duva.messages.send(
+    from_="Example <notifications@example.com>",
+    to=["Jean Tremblay <jean@example.org>"],
+    cc=["accounting@example.org"],
+    bcc=["archive@example.com"],
+    subject="Your order",
+    text="Thank you for your order.",
+)
+```
+
 ## Reading events and pagination
 
 ```python

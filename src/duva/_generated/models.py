@@ -128,6 +128,14 @@ class StatsPeriod(BaseModel):
 
 class Recipient(BaseModel):
     email: str
+    type: Literal["to", "cc", "bcc"]
+    """
+    `to`, `cc` or `bcc`: how the address was given in the request.
+    """
+    name: str | None
+    """
+    The name given with `Name <address>`; `null` for a bare address.
+    """
     status: Literal["queued", "sent", "delivered", "bounced", "failed", "suppressed"]
     updated_at: AwareDatetime
 
@@ -233,7 +241,8 @@ class SendMessageRequest(BaseModel):
     """
     Forme de la requête. Les règles de contenu (adresses, en-têtes...) : `services.messages`.
 
-    `extra="forbid"` : une faute de frappe (`bcc`, `replyto`) est refusée, pas ignorée en silence.
+    `extra="forbid"` : une faute de frappe (`replyto`, `subjet`) est refusée, pas ignorée en
+    silence.
     Les bornes ci-dessous ne servent qu'à limiter le travail avant validation.
     """
 
@@ -246,7 +255,15 @@ class SendMessageRequest(BaseModel):
     """
     to: Annotated[list[str], Field(max_length=1000, min_length=1)]
     """
-    Required. Bare addresses (no `Name <address>`), de-duplicated case-insensitively. The maximum depends on the plan (5 in the sandbox). One copy per recipient: each sees only their own address.
+    Required. Each entry is an `address` or a `Name <address>`; de-duplicated case-insensitively. `to`, `cc` and `bcc` together count against the maximum of the plan (5 in the sandbox). One copy per address, and every copy shows all the `to` and all the `cc`.
+    """
+    cc: Annotated[list[str] | None, Field(max_length=1000)] = None
+    """
+    Optional, same format as `to`. Shown to every recipient. An address already in `to` is ignored.
+    """
+    bcc: Annotated[list[str] | None, Field(max_length=1000)] = None
+    """
+    Optional, same format as `to`. Never shown to the other recipients: only its own copy carries a `Bcc` header, with its address alone. An address already in `to` or `cc` is ignored.
     """
     subject: Annotated[str, Field(max_length=5000)]
     """
